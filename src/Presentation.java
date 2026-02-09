@@ -100,8 +100,6 @@ public class Presentation {
 		System.exit(n);
 	}
 
-	public void failBuild() {
-		thisWillNotCompile();
-	}
+
 
 }
