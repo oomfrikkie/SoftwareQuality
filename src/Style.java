@@ -55,4 +55,6 @@ public class Style {
 	public Font getFont(float scale) {
 		return font.deriveFont(fontSize * scale);
 	}
+
+
 }

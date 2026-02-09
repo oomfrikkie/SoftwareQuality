@@ -99,4 +99,9 @@ public class Presentation {
 	public void exit(int n) {
 		System.exit(n);
 	}
+
+	public void failBuild() {
+		thisWillNotCompile();
+	}
+
 }
