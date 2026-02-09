@@ -1,0 +1,54 @@
+name: CI (DTAP)
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+      - production
+  push:
+    branches:
+      - develop
+      - main
+      - production
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Detect build tool
+        id: detect
+        run: |
+          if [ -f "pom.xml" ]; then
+            echo "tool=maven" >> $GITHUB_OUTPUT
+          elif [ -f "build.gradle" ] || [ -f "build.gradle.kts" ] || [ -f "gradlew" ]; then
+            echo "tool=gradle" >> $GITHUB_OUTPUT
+          else
+            echo "tool=unknown" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build & test (Maven)
+        if: steps.detect.outputs.tool == 'maven'
+        run: mvn -B test
+
+      - name: Build & test (Gradle)
+        if: steps.detect.outputs.tool == 'gradle'
+        run: |
+          chmod +x ./gradlew || true
+          if [ -f "./gradlew" ]; then ./gradlew test; else gradle test; fi
+
+      - name: Fail if no build tool found
+        if: steps.detect.outputs.tool == 'unknown'
+        run: |
+          echo "No pom.xml or Gradle build files found. Add Maven/Gradle build config."
+          exit 1
