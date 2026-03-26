@@ -1,27 +1,27 @@
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
 public class XMLFileHandlerTest {
 
     private Presentation presentation;
     private XMLFileHandler handler;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         presentation = new Presentation();
         handler = new XMLFileHandler();
     }
 
     @Test
-    void testLoadFile() {
+    public void testLoadFile() {
         handler.loadFile(presentation, "test.xml"); // make sure test.xml exists
         assertNotNull(presentation.getTitle());
     }
 
     @Test
-    void testSaveFile() {
+    public void testSaveFile() {
         presentation.setTitle("JUnit Test");
         handler.saveFile(presentation, "test_out.xml");
 
