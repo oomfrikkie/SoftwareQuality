@@ -17,6 +17,8 @@ jobs:
   development:
     runs-on: ubuntu-latest
     steps:
+      - name: Ensure bin directory exists
+        run: mkdir -p bin
       - name: Checkout
         uses: actions/checkout@v4
 
