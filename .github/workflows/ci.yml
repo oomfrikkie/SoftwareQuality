@@ -17,10 +17,10 @@ jobs:
   development:
     runs-on: ubuntu-latest
     steps:
-      - name: Ensure bin directory exists
-        run: mkdir -p bin
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Ensure bin directory exists
+        run: mkdir -p bin
 
       - name: Set up Java
         uses: actions/setup-java@v4
