@@ -1,22 +1,30 @@
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class XMLFileHandlerTest {
-    @Test
-    public void testLoadFile() {
-        Presentation p = new Presentation();
-        XMLFileHandler handler = new XMLFileHandler();
-        handler.loadFile(p, "test.xml"); // Make sure test.xml exists or mock this
-        assertNotNull(p.getTitle());
+
+    private Presentation presentation;
+    private XMLFileHandler handler;
+
+    @BeforeEach
+    void setUp() {
+        presentation = new Presentation();
+        handler = new XMLFileHandler();
     }
 
     @Test
-    public void testSaveFile() {
-        Presentation p = new Presentation();
-        p.setTitle("JUnit Test");
-        XMLFileHandler handler = new XMLFileHandler();
-        handler.saveFile(p, "test_out.xml");
-        // You could add more checks here if needed
-        assertTrue(true); // Dummy assertion
+    void testLoadFile() {
+        handler.loadFile(presentation, "test.xml"); // make sure test.xml exists
+        assertNotNull(presentation.getTitle());
+    }
+
+    @Test
+    void testSaveFile() {
+        presentation.setTitle("JUnit Test");
+        handler.saveFile(presentation, "test_out.xml");
+
+        assertEquals("JUnit Test", presentation.getTitle());
     }
 }
