@@ -19,7 +19,7 @@ import javax.swing.JFrame;
 
 public class SlideViewerComponent extends JComponent {
 		
-	private Slide slide; // current slide
+	private SlideLeaf slide; // current slide
 	private Font labelFont = null; // font for labels
 	private Presentation presentation = null; // the presentation
 	private JFrame frame = null;
@@ -42,10 +42,10 @@ public class SlideViewerComponent extends JComponent {
 	}
 
 	public Dimension getPreferredSize() {
-		return new Dimension(Slide.WIDTH, Slide.HEIGHT);
+		return new Dimension(SlideLeaf.WIDTH, SlideLeaf.HEIGHT);
 	}
 
-	public void update(Presentation presentation, Slide data) {
+	public void update(Presentation presentation, SlideLeaf data) {
 		if (data == null) {
 			repaint();
 			return;
