@@ -1,9 +1,15 @@
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.image.ImageObserver;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * <p>Presentation maintains the slides in the presentation.</p>
- * <p>There is only instance of this class.</p>
+ * <p>Acts as the Composite node in the Composite pattern:
+ * it holds a collection of Presentable children (SlideLeaf instances) and
+ * implements Presentable itself so it can be treated uniformly.</p>
  * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
  * @version 1.1 2002/12/17 Gert Florijn
  * @version 1.2 2003/11/19 Sylvia Stuurman
@@ -13,11 +19,11 @@ import java.util.ArrayList;
  * @version 1.6 2014/05/16 Sylvia Stuurman
  */
 
-public class Presentation {
+public class Presentation implements Presentable {
 	private String showTitle; // title of the presentation
-	private ArrayList<Slide> showList = null; // an ArrayList with Slides
-	private int currentSlideNumber = 0; // the slidenummer of the current Slide
-	private SlideViewerComponent slideViewComponent = null; // the viewcomponent of the Slides
+	private List<Presentable> childs = null; // the slides as Presentable children
+	private int currentSlideNumber = 0; // the slidenumber of the current slide
+	private SlideViewerComponent slideViewComponent = null; // the viewcomponent of the slides
 
 	public Presentation() {
 		slideViewComponent = null;
@@ -30,7 +36,7 @@ public class Presentation {
 	}
 
 	public int getSize() {
-		return showList.size();
+		return childs.size();
 	}
 
 	public String getTitle() {
@@ -58,48 +64,70 @@ public class Presentation {
 		}
 	}
 
-	// go to the previous slide unless your at the beginning of the presentation
+	// go to the previous slide unless at the beginning of the presentation
 	public void prevSlide() {
 		if (currentSlideNumber > 0) {
 			setSlideNumber(currentSlideNumber - 1);
-	    }
+		}
 	}
 
-	// go to the next slide unless your at the end of the presentation.
+	// go to the next slide unless at the end of the presentation
 	public void nextSlide() {
-		if (currentSlideNumber < (showList.size()-1)) {
+		if (currentSlideNumber < (childs.size() - 1)) {
 			setSlideNumber(currentSlideNumber + 1);
 		}
 	}
 
-	// Delete the presentation to be ready for the next one.
+	// Delete the presentation to be ready for the next one
 	void clear() {
-		showList = new ArrayList<Slide>();
+		childs = new ArrayList<Presentable>();
 		setSlideNumber(-1);
 	}
 
-	// Add a slide to the presentation
-	public void append(Slide slide) {
-		showList.add(slide);
+	// Composite: add a child Presentable (e.g. a SlideLeaf)
+	public void addChild(Presentable child) {
+		childs.add(child);
 	}
 
-	// Get a slide with a certain slidenumber
-	public Slide getSlide(int number) {
-		if (number < 0 || number >= getSize()){
+	// Composite: return the currently active child
+	public Presentable getChild() {
+		return getCurrentSlide();
+	}
+
+	// Composite: remove a child Presentable
+	public void removeChild(Presentable child) {
+		childs.remove(child);
+	}
+
+	// Get a slide with a certain slide number
+	public SlideLeaf getSlide(int number) {
+		if (number < 0 || number >= getSize()) {
 			return null;
-	    }
-			return (Slide)showList.get(number);
+		}
+		return (SlideLeaf) childs.get(number);
 	}
 
 	// Give the current slide
-	public Slide getCurrentSlide() {
+	public SlideLeaf getCurrentSlide() {
 		return getSlide(currentSlideNumber);
+	}
+
+	// Composite implementation: bounding box delegates to a single slide size
+	@Override
+	public Rectangle getBoundingBox(Graphics g, ImageObserver observer, float scale, Style style) {
+		return new Rectangle(0, 0, (int)(SlideLeaf.WIDTH * scale), (int)(SlideLeaf.HEIGHT * scale));
+	}
+
+	// Composite implementation: draw delegates to the current slide
+	@Override
+	public void draw(int x, int y, float scale, Graphics g, Style style, ImageObserver observer) {
+		SlideLeaf current = getCurrentSlide();
+		if (current != null) {
+			current.draw(x, y, scale, g, style, observer);
+		}
 	}
 
 	public void exit(int n) {
 		System.exit(n);
 	}
-
-
-
 }
