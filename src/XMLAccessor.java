@@ -64,9 +64,9 @@ public class XMLAccessor extends Accessor {
 			max = slides.getLength();
 			for (slideNumber = 0; slideNumber < max; slideNumber++) {
 				Element xmlSlide = (Element) slides.item(slideNumber);
-				Slide slide = new Slide();
+				SlideLeaf slide = new SlideLeaf();
 				slide.setTitle(getTitle(xmlSlide, SLIDETITLE));
-				presentation.append(slide);
+				presentation.addChild(slide);
 				
 				NodeList slideItems = xmlSlide.getElementsByTagName(ITEM);
 				maxItems = slideItems.getLength();
@@ -87,7 +87,7 @@ public class XMLAccessor extends Accessor {
 		}	
 	}
 
-	protected void loadSlideItem(Slide slide, Element item) {
+	protected void loadSlideItem(SlideLeaf slide, Element item) {
 		int level = 1; // default
 		NamedNodeMap attributes = item.getAttributes();
 		String leveltext = attributes.getNamedItem(LEVEL).getTextContent();
@@ -122,10 +122,10 @@ public class XMLAccessor extends Accessor {
 		out.print(presentation.getTitle());
 		out.println("</showtitle>");
 		for (int slideNumber=0; slideNumber<presentation.getSize(); slideNumber++) {
-			Slide slide = presentation.getSlide(slideNumber);
+			SlideLeaf slide = presentation.getSlide(slideNumber);
 			out.println("<slide>");
 			out.println("<title>" + slide.getTitle() + "</title>");
-			Vector<SlideItem> slideItems = slide.getSlideItems();
+			Vector<Presentable> slideItems = slide.getSlideItems();
 			for (int itemNumber = 0; itemNumber<slideItems.size(); itemNumber++) {
 				SlideItem slideItem = (SlideItem) slideItems.elementAt(itemNumber);
 				out.print("<item kind="); 
