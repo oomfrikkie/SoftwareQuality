@@ -22,7 +22,7 @@ public class XMLFileHandlerTest {
 
     @Test
     public void testSaveFile() {
-        presentation.setTitle("JUnit Test");
+        presentation.setTitle("JUnit Test"); 
         handler.saveFile(presentation, "test_out.xml");
 
         assertEquals("JUnit Test", presentation.getTitle());
