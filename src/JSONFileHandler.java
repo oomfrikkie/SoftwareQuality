@@ -9,6 +9,9 @@ import java.util.*;
 public class JSONFileHandler implements PresentationFileHandler {
     @Override
     public void loadFile(Presentation p, String fn) {
+        if (fn == null || !fn.toLowerCase().endsWith(".json")) {
+            throw new IllegalArgumentException("Only .json files are supported by JSONFileHandler");
+        }
         try {
             String content = new String(Files.readAllBytes(Paths.get(fn)));
             JSONObject obj = new JSONObject(content);
