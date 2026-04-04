@@ -29,10 +29,13 @@ jobs:
       - name: Create bin directory
         run: mkdir -p bin
 
+      - name: Download org.json
+        run: curl -L -o lib/json-20230618.jar https://repo1.maven.org/maven2/org/json/json/20230618/json-20230618.jar
+
       - name: Compile Java files
         run: |
           find ./src -name "*.java" > sources.txt
-          javac -d bin @sources.txt
+          javac -cp "lib/json-20230618.jar:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar" -d bin @sources.txt
 
       - name: Run Checkstyle
         run: |
@@ -41,7 +44,9 @@ jobs:
 
       - name: Run JUnit tests
         run: |
-          echo "No test runner configured yet. Add JUnit command here."
+          find ./test -name "*.java" > test_sources.txt
+          javac -cp "lib/json-20230618.jar:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar:bin" -d bin @test_sources.txt
+          java -cp "lib/json-20230618.jar:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar:bin" org.junit.runner.JUnitCore AccessorTest
 
       - name: Build JAR
         run: |
