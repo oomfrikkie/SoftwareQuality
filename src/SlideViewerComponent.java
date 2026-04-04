@@ -17,8 +17,8 @@ import javax.swing.JFrame;
  * @version 1.6 2014/05/16 Sylvia Stuurman
  */
 
-public class SlideViewerComponent extends JComponent {
-		
+public class SlideViewerComponent extends JComponent implements Observer {
+
 	private SlideLeaf slide; // current slide
 	private Font labelFont = null; // font for labels
 	private Presentation presentation = null; // the presentation
@@ -45,13 +45,10 @@ public class SlideViewerComponent extends JComponent {
 		return new Dimension(SlideLeaf.WIDTH, SlideLeaf.HEIGHT);
 	}
 
-	public void update(Presentation presentation, SlideLeaf data) {
-		if (data == null) {
-			repaint();
-			return;
-		}
+	// Observer pattern: called by Presentation when the current slide changes
+	public void update(Presentation presentation) {
 		this.presentation = presentation;
-		this.slide = data;
+		this.slide = presentation.getCurrentSlide();
 		repaint();
 		frame.setTitle(presentation.getTitle());
 	}
