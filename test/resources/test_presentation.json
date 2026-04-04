@@ -1,0 +1,11 @@
+{
+  "title": "JSON Test Presentation",
+  "slides": [
+    {
+      "title": "JSON Slide 1",
+      "items": [
+        { "kind": "text", "level": 1, "content": "Welcome to JSON!" }
+      ]
+    }
+  ]
+}

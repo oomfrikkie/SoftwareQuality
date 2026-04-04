@@ -27,17 +27,23 @@ public class JabberPoint {
 		Style.createStyles();
 		Presentation presentation = new Presentation();
 		new SlideViewerFrame(JABVERSION, presentation);
-		try {
-			if (argv.length == 0) { // een demo presentatie
-				Accessor.getDemoAccessor().loadFile(presentation, "");
-			} else {
-				new XMLAccessor().loadFile(presentation, argv[0]);
-			}
-			presentation.setSlideNumber(0);
-		} catch (IOException ex) {
-			JOptionPane.showMessageDialog(null,
-					IOERR + ex, JABERR,
-					JOptionPane.ERROR_MESSAGE);
-		}
+		   try {
+			   if (argv.length == 0) { // een demo presentatie
+				   Accessor.getDemoAccessor().loadFile(presentation, "");
+			   } else {
+				   Accessor accessor = new Accessor();
+				   if (argv[0].endsWith(".json")) {
+					   accessor.setStrategy(new JSONFileHandler());
+				   } else {
+					   accessor.setStrategy(new XMLFileHandler());
+				   }
+				   accessor.loadFile(presentation, argv[0]);
+			   }
+			   presentation.setSlideNumber(0);
+		   } catch (IOException ex) {
+			   JOptionPane.showMessageDialog(null,
+					   IOERR + ex, JABERR,
+					   JOptionPane.ERROR_MESSAGE);
+		   }
 	}
 }

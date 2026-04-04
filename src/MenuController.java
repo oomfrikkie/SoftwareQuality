@@ -53,16 +53,21 @@ public class MenuController extends MenuBar {
 		fileMenu.add(menuItem = mkMenuItem(OPEN));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
-				presentation.clear();
-				Accessor xmlAccessor = new XMLAccessor();
-				try {
-					xmlAccessor.loadFile(presentation, TESTFILE);
-					presentation.setSlideNumber(0);
-				} catch (IOException exc) {
-					JOptionPane.showMessageDialog(parent, IOEX + exc, 
-         			LOADERR, JOptionPane.ERROR_MESSAGE);
-				}
-				parent.repaint();
+				   presentation.clear();
+				   Accessor accessor = new Accessor();
+				   if (TESTFILE.endsWith(".json")) {
+					   accessor.setStrategy(new JSONFileHandler());
+				   } else {
+					   accessor.setStrategy(new XMLFileHandler());
+				   }
+				   try {
+					   accessor.loadFile(presentation, TESTFILE);
+					   presentation.setSlideNumber(0);
+				   } catch (IOException exc) {
+					   JOptionPane.showMessageDialog(parent, IOEX + exc, 
+			   			LOADERR, JOptionPane.ERROR_MESSAGE);
+				   }
+				   parent.repaint();
 			}
 		} );
 		fileMenu.add(menuItem = mkMenuItem(NEW));
@@ -75,13 +80,18 @@ public class MenuController extends MenuBar {
 		fileMenu.add(menuItem = mkMenuItem(SAVE));
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Accessor xmlAccessor = new XMLAccessor();
-				try {
-					xmlAccessor.saveFile(presentation, SAVEFILE);
-				} catch (IOException exc) {
-					JOptionPane.showMessageDialog(parent, IOEX + exc, 
-							SAVEERR, JOptionPane.ERROR_MESSAGE);
-				}
+				   Accessor accessor = new Accessor();
+				   if (SAVEFILE.endsWith(".json")) {
+					   accessor.setStrategy(new JSONFileHandler());
+				   } else {
+					   accessor.setStrategy(new XMLFileHandler());
+				   }
+				   try {
+					   accessor.saveFile(presentation, SAVEFILE);
+				   } catch (IOException exc) {
+					   JOptionPane.showMessageDialog(parent, IOEX + exc, 
+							   SAVEERR, JOptionPane.ERROR_MESSAGE);
+				   }
 			}
 		});
 		fileMenu.addSeparator();
