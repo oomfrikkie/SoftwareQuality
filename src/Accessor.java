@@ -13,19 +13,38 @@ import java.io.IOException;
  * @version 1.6 2014/05/16 Sylvia Stuurman
  */
 
-public abstract class Accessor {
+public class Accessor 	{
 	public static final String DEMO_NAME = "Demonstration presentation";
 	public static final String DEFAULT_EXTENSION = ".xml";
+
+	private PresentationFileHandler handler;
 
 	public static Accessor getDemoAccessor() {
 		return new DemoPresentation();
 	}
 
 	public Accessor() {
+		// Default to XMLFileHandler, can be changed with setStrategy
+		this.handler = new XMLFileHandler();
 	}
 
-	abstract public void loadFile(Presentation p, String fn) throws IOException;
+	public void setStrategy(PresentationFileHandler handler) {
+		this.handler = handler;
+	}
 
-	abstract public void saveFile(Presentation p, String fn) throws IOException;
+	public void loadFile(Presentation p, String fn) throws IOException {
+		if (handler != null) {
+			handler.loadFile(p, fn);
+		} else {
+			throw new IllegalStateException("No file handler set");
+		}
+	}
 
+	public void saveFile(Presentation p, String fn) throws IOException {
+		if (handler != null) {
+			handler.saveFile(p, fn);
+		} else {
+			throw new IllegalStateException("No file handler set");
+		}
+	}
 }
