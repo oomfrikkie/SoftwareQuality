@@ -23,15 +23,9 @@ public class Presentation implements Presentable {
 	private String showTitle; // title of the presentation
 	private List<Presentable> childs = null; // the slides as Presentable children
 	private int currentSlideNumber = 0; // the slidenumber of the current slide
-	private SlideViewerComponent slideViewComponent = null; // the viewcomponent of the slides
+	private List<Observer> observers = new ArrayList<Observer>(); // list of observers (Publisher role)
 
 	public Presentation() {
-		slideViewComponent = null;
-		clear();
-	}
-
-	public Presentation(SlideViewerComponent slideViewerComponent) {
-		this.slideViewComponent = slideViewerComponent;
 		clear();
 	}
 
@@ -47,8 +41,21 @@ public class Presentation implements Presentable {
 		showTitle = nt;
 	}
 
-	public void setShowView(SlideViewerComponent slideViewerComponent) {
-		this.slideViewComponent = slideViewerComponent;
+	// Observer pattern: register an observer
+	public void addObserver(Observer observer) {
+		observers.add(observer);
+	}
+
+	// Observer pattern: unregister an observer
+	public void removeObserver(Observer observer) {
+		observers.remove(observer);
+	}
+
+	// Observer pattern: notify all registered observers
+	public void notifyObservers() {
+		for (Observer observer : observers) {
+			observer.update(this);
+		}
 	}
 
 	// give the number of the current slide
@@ -56,12 +63,10 @@ public class Presentation implements Presentable {
 		return currentSlideNumber;
 	}
 
-	// change the current slide number and signal it to the window
+	// change the current slide number and notify all observers
 	public void setSlideNumber(int number) {
 		currentSlideNumber = number;
-		if (slideViewComponent != null) {
-			slideViewComponent.update(this, getCurrentSlide());
-		}
+		notifyObservers();
 	}
 
 	// go to the previous slide unless at the beginning of the presentation
