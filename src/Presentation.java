@@ -43,7 +43,9 @@ public class Presentation implements Presentable {
 
 	// Observer pattern: register an observer
 	public void addObserver(Observer observer) {
-		observers.add(observer);
+		if (observer != null) {
+			observers.add(observer);
+		}
 	}
 
 	// Observer pattern: unregister an observer
