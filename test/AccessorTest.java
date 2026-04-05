@@ -46,4 +46,27 @@ public class AccessorTest {
             assertTrue(true);
         }
     }
+
+    @Test
+    public void getDemoAccessor_shouldReturnNonNullAccessor() {
+        Accessor accessor = Accessor.getDemoAccessor();
+        assertNotNull(accessor);
+    }
+
+    @Test
+    public void saveAndReload_xmlFile_shouldPreserveTitle() {
+        try {
+            Presentation p = new Presentation();
+            p.setTitle("Save Test");
+            Accessor accessor = new Accessor();
+            accessor.setStrategy(new XMLFileHandler());
+            accessor.saveFile(p, "test_save_output.xml");
+
+            Presentation loaded = new Presentation();
+            accessor.loadFile(loaded, "test_save_output.xml");
+            assertEquals("Save Test", loaded.getTitle());
+        } catch (java.io.IOException e) {
+            fail("IOException thrown: " + e.getMessage());
+        }
+    }
 }
