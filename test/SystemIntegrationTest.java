@@ -20,9 +20,11 @@ public class SystemIntegrationTest {
         } catch (Exception e) {
             fail("Failed to load presentation: " + e.getMessage());
         }
-        // Attach actual observer
-        slideViewerComponent = new SlideViewerComponent(presentation, new javax.swing.JFrame());
-        presentation.addObserver(slideViewerComponent);
+        // Attach actual observer (skip in headless environments like CI)
+        if (!java.awt.GraphicsEnvironment.isHeadless()) {
+            slideViewerComponent = new SlideViewerComponent(presentation, new javax.swing.JFrame());
+            presentation.addObserver(slideViewerComponent);
+        }
     }
 
     
