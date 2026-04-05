@@ -46,7 +46,7 @@ jobs:
         run: |
           find ./test -name "*.java" > test_sources.txt
           javac -cp "lib/json-20230618.jar:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar:bin" -d bin @test_sources.txt
-          java -cp "lib/json-20230618.jar:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar:bin" org.junit.runner.JUnitCore AccessorTest XMLFileHandlerTest ObserverPatternTest PresentationCompositeTest SystemIntegrationTest
+          java -Djava.awt.headless=true -cp "lib/json-20230618.jar:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar:bin" org.junit.runner.JUnitCore AccessorTest XMLFileHandlerTest ObserverPatternTest PresentationCompositeTest SystemIntegrationTest
 
       - name: Build JAR
         run: |
