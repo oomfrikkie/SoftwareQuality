@@ -1,9 +1,8 @@
 
 
-// NOTE: If you get errors about missing JUnit, ensure JUnit 5 is in your classpath.
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 // Integration test for the whole system with Strategy, Composite, and Observer patterns
 public class SystemIntegrationTest {
@@ -11,8 +10,8 @@ public class SystemIntegrationTest {
     private SlideViewerComponent slideViewerComponent;
     private Accessor accessor;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         accessor = new Accessor();
         accessor.setStrategy(new XMLFileHandler());
         presentation = new Presentation();
@@ -26,20 +25,21 @@ public class SystemIntegrationTest {
         presentation.addObserver(slideViewerComponent);
     }
 
+    
     @Test
-    void integration_patternsStrategyCompositeObserver_shouldWorkTogether() {
+    public void integration_patternsStrategyCompositeObserver_shouldWorkTogether() {
         // Composite: Check structure
-        assertTrue(presentation.getSize() > 0, "Slides should not be empty");
-        assertNotNull(presentation.getSlide(0), "First slide should not be null");
+        assertTrue("Slides should not be empty", presentation.getSize() > 0);
+        assertNotNull("First slide should not be null", presentation.getSlide(0));
         // If you want to check items on the first slide, you can do:
-        assertTrue(presentation.getSlide(0).getSlideItems().size() > 0, "First slide should have items");
+        assertTrue("First slide should have items", presentation.getSlide(0).getSlideItems().size() > 0);
 
         // Observer: Simulate change and check notification
         // We'll check if the SlideViewerComponent updates its internal state after a change
         int oldSlideNumber = presentation.getSlideNumber();
         presentation.setTitle("New Title"); // Should trigger observer
         // Here, we check that the slide number remains valid after the title change
-        assertEquals(oldSlideNumber, presentation.getSlideNumber(), "SlideViewerComponent should remain in sync after title change");
+        assertEquals("SlideViewerComponent should remain in sync after title change", oldSlideNumber, presentation.getSlideNumber());
 
         // Strategy: Switch to JSON handler and reload
         accessor.setStrategy(new JSONFileHandler());
@@ -48,7 +48,7 @@ public class SystemIntegrationTest {
         } catch (Exception e) {
             fail("Failed to load JSON presentation: " + e.getMessage());
         }
-        assertTrue(presentation.getSize() > 0, "Slides should not be empty after JSON load");
-        assertNotNull(presentation.getSlide(0), "First slide should not be null after JSON load");
+        assertTrue("Slides should not be empty after JSON load", presentation.getSize() > 0);
+        assertNotNull("First slide should not be null after JSON load", presentation.getSlide(0));
     }
 }
