@@ -1,6 +1,9 @@
 public class XMLFileHandler implements PresentationFileHandler {
     @Override
     public void loadFile(Presentation p, String fn) {
+        if (!fn.toLowerCase().endsWith(".xml")) {
+            throw new IllegalArgumentException("Unsupported file type for XMLFileHandler: " + fn);
+        }
         try {
             new XMLAccessor().loadFile(p, fn);
         } catch (Exception e) {
